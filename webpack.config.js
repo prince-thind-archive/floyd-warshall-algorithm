@@ -2,7 +2,7 @@ const path = require('path');
  const HtmlWebpackPlugin = require('html-webpack-plugin');
 
  module.exports = {
-   mode: 'development',
+   mode: 'production',
    entry: {
      index: './src/index.js',
    },
@@ -11,7 +11,6 @@ const path = require('path');
        template:'./src/index.html',
      }),
    ],
-   devtool: 'inline-source-map',
     module: {
     rules: [
       {
@@ -31,3 +30,6 @@ const path = require('path');
     clean: true,
    },
  };
+
+ //devtool: 'inline-source-map',
+ 
