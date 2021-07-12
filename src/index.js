@@ -7,9 +7,10 @@ const DOMNodes = (function () {
   const fileForm = document.querySelector('#fileForm');
   const generatedMatrix = document.querySelector('#generatedMatrix');
   const resultMatrix = document.querySelector('#resultMatrix');
+  const downlaod = document.querySelector('#downlaod');
   const root = document.querySelector(':root');
 
-  return { root, numberForm, fileForm, generatedMatrix, resultMatrix };
+  return { download, root, numberForm, fileForm, generatedMatrix, resultMatrix };
 })();
 
 const mainModule = (function () {
@@ -17,12 +18,65 @@ const mainModule = (function () {
   let resultMatrix = [];
 
   DOMNodes.numberForm.addEventListener('submit', numberLogic);
+  DOMNodes.fileForm.addEventListener('submit', fileLogic);
+  DOMNodes.download.addEventListener('click', downloadFile);
+
+  function downloadFile() {
+    let resultString='';
+    for(let arr of resultMatrix){
+      resultString+=arr;
+      resultString+='\n';
+    }
+
+    pushFile('data.csv',resultString);
+
+    function pushFile(filename, text) {
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
+  }
 
   function numberLogic(e) {
     e.preventDefault();
     generateMatrix(DOMNodes.numberForm.number.value);
     generateResult(matrix);
     renderMatrices();
+  }
+
+  function fileLogic(e) {
+    e.preventDefault();
+    generateMatrixFromFile(DOMNodes.fileForm.file.files[0]);
+  }
+
+  function generateMatrixFromFile(file) {
+    loadFile(file).then((arr) => {
+      matrix = arr;
+      generateResult(matrix);
+      renderMatrices();
+    });
+
+    async function loadFile(file) {
+      const text = await new Response(file).text();
+      const resArr = [];
+      const stringArr = text.split('\n');
+      stringArr.pop();
+      for (let tempArr of stringArr) {
+        tempArr = tempArr.split(',');
+        tempArr.forEach((e, i) => {
+          tempArr[i] = +e;
+        });
+        resArr.push(tempArr);
+      }
+      return resArr;
+    }
   }
 
   function renderMatrices() {
