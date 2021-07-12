@@ -1,6 +1,6 @@
 import './styles/style.css';
 import './styles/matrix.css';
-import floydWarhsall from './floydWarshall.js'
+import floydWarhsall from './floydWarshall.js';
 
 const DOMNodes = (function () {
   const numberForm = document.querySelector('#numberForm');
@@ -41,7 +41,11 @@ const mainModule = (function () {
       for (let j = 0; j < arrLength; j++) {
         const matrixElement = document.createElement('div');
         matrixElement.classList.add('matrix-element');
-        matrixElement.innerText = matrix[i][j];
+        if (arr[i][j] == Infinity) {
+          matrixElement.innerHTML = '∞';
+        } else {
+          matrixElement.innerText = arr[i][j];
+        }
         frame.appendChild(matrixElement);
       }
     }
@@ -54,7 +58,13 @@ const mainModule = (function () {
       const tempArr = [];
       for (let j = 0; j < num; j++) {
         const randomNumber = Math.trunc(Math.random() * 100);
-        tempArr.push(randomNumber);
+        if (i == j) {
+          tempArr.push(0);
+        } else if (Math.trunc(Math.random() * 3) == 2) {
+          tempArr.push(Infinity);
+        } else {
+          tempArr.push(randomNumber);
+        }
       }
       matrix.push(tempArr);
     }
@@ -62,6 +72,6 @@ const mainModule = (function () {
 
   function generateResult(arr) {
     resultMatrix = [];
-    resultMatrix=floydWarhsall(arr);
+    resultMatrix = floydWarhsall(arr);
   }
 })();
