@@ -10,10 +10,10 @@ const floydWarhsall = function (arr) {
   for (let k = 0; k < arrLength; k++) {
     for (let i = 0; i < arrLength; i++) {
       for (let j = 0; j < arrLength; j++) {
-          if(i==k||j==k){
-              break;
-          }
-          res[i][j]=Math.min(res[k][j]+res[i][k],res[i][j])
+        if (i == k || j == k) {
+          continue;
+        }
+        res[i][j] = Math.min(res[k][j] + res[i][k], res[i][j]);
       }
     }
   }
